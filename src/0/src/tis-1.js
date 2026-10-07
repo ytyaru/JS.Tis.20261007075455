@@ -1,6 +1,16 @@
 const isObj = v=>null!==v && 'object'===typeof v;
 const isFn = v=>'function'===typeof v;
 const isNum = v=>'number'===typeof v;
+//const isSafeNum = v=> isNum(v) && (v<=Number.MAX_SAFE_INTEGER && Number.MIN_SAFE_INTEGER<=v);
+//const isSafeNum = v=> (v<=Number.MAX_SAFE_INTEGER && Number.MIN_SAFE_INTEGER<=v);
+/*
+const isConstructor = v=> {
+    if (typeof v !== 'function') return false;
+    // prototype プロパティがあり、かつその constructor が自身を指しているか
+    // (ただし、ジェネレーター関数などもprototypeを持つため、これだけでは完全ではありません)
+    return v.prototype !== undefined;
+}
+*/
 const isConstructor = v => {
     if (typeof v !== 'function') return false;
     try {
@@ -15,19 +25,15 @@ const isConstructor = v => {
         return false;
     }
 }
-const getCode = v => isFn(v) ? Function.prototype.toString.call(v)
-    .replace(/\/\*[\s\S]*?\*\/|\/\/.*$/gm, '').trim() // コメント削除
-    .replace(/(["'`])(?:(?!\1)[^\\]|\\.)*?\1/g, '""') // 文字列リテラル（'' , "" , ``）を空文字に置換
-    .replace(/\/([^\/\n\\]|\\.)+\/[gimsuy]*/g, '//') : ''; // 正規表現リテラルを除外
-isConstructor.es6 = v => /^\s*class\b/.test(getCode(v)); 
+
 export const tis = {
     nun: v=>'und nul nan'.split(' ').some(n=>tis[n](v)),
     und: v=>undefined===v,
     nul: v=>null===v,
     nan: v=>Number.isNaN(v),
-
     bln: v=>'boolean'===typeof v,
     num: isNum,
+//    dum: v=>isNum(v) && !Number.isSafeInteger(v), // Danger Number (NaN, Infinity, 浮動小数点数, SAFE超過)
     fin: v=>Number.isFinite(v) && (v<=Number.MAX_SAFE_INTEGER && Number.MIN_SAFE_INTEGER<=v),
     int: v=>Number.isSafeInteger(v),
     big: v=>'bigint'===typeof v,
@@ -44,3 +50,4 @@ export const tis = {
     cls: isConstructor,
 };
 export const tof = v => Object.prototype.toString.call(v).slice(8, -1);
+
