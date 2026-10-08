@@ -43,4 +43,35 @@ export const tis = {
     run: isFn,
     cls: isConstructor,
 };
+// export const tow = v => 
+//const getNumName = v => isNum(v) ? Number.isNaN(v) ? 'NaN' : Infinity===v ? 'Infinity' : -Infinity===v ? '-Infinity' : Number.isSafeInteger(v) ? 'Integer' : Number.isFinite(v) ? 'Finite' : '' ;
 export const tof = v => Object.prototype.toString.call(v).slice(8, -1);
+/*
+// プロキシのハンドラを定義する共通関数
+const createTowHandler = (targetObj) => {
+    return {
+        get(target, prop, receiver) {
+            const value = Reflect.get(target, prop, receiver);
+
+            // 関数（判定関数）の場合：実行結果を検証してエラーを投げるラッパーを返す
+            if (typeof value === 'function') {
+                return (...args) => {
+                    const result = value(...args);
+                    if (!result) {
+                        throw new TypeError(`Type mismatch for method '${String(prop)}'.`);
+                    }
+                    return true;
+                };
+            }
+
+            // オブジェクト（ネストされたプロパティ：例: cls.es6 など）の場合：さらにProxyでラップする
+            if (value !== null && typeof value === 'object') {
+                return new Proxy(value, createTowHandler(value));
+            }
+
+            return value;
+        }
+    };
+};
+export const tow = new Proxy(tis, createTowHandler(tis));
+*/
