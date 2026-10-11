@@ -4,13 +4,53 @@ import { tis } from "../src/tis.js";
 import { assertThrow } from "./assert-throw.js";
 class C {static sm() {} static *sgm() {yield 0}}
 describe("tis", () => {
+    describe("nun", () => {
+        describe('true', () => {
+            test.each([undefined,null,NaN].map(x=>[x]))('%p',v=>expect(tis.nun(v)).toBe(true));
+        });
+        describe('false', () => {
+            test.each([false,0,'',0n,Symbol(),{},[],Map].map(x=>[x]))('%p',v=>expect(tis.nun(v)).toBe(false));
+        });
+    });
+    describe("nul", () => {
+        describe('true', () => {
+            test.each([null].map(x=>[x]))('%p',v=>expect(tis.nul(v)).toBe(true));
+        });
+        describe('false', () => {
+            test.each([undefined,NaN,false,0,'',0n,Symbol(),{},[],Map].map(x=>[x]))('%p',v=>expect(tis.nul(v)).toBe(false));
+        });
+    });
+    describe("und", () => {
+        describe('true', () => {
+            test.each([undefined].map(x=>[x]))('%p',v=>expect(tis.und(v)).toBe(true));
+        });
+        describe('false', () => {
+            test.each([null,NaN,false,0,'',0n,Symbol(),{},[],Map].map(x=>[x]))('%p',v=>expect(tis.und(v)).toBe(false));
+        });
+    });
+    describe("nan", () => {
+        describe('true', () => {
+            test.each([NaN].map(x=>[x]))('%p',v=>expect(tis.nan(v)).toBe(true));
+        });
+        describe('false', () => {
+            test.each([null,undefined,false,0,'',0n,Symbol(),{},[],Map].map(x=>[x]))('%p',v=>expect(tis.nan(v)).toBe(false));
+        });
+    });
+    describe("bln", () => {
+        describe('true', () => {
+            test.each([false,true].map(x=>[x]))('%p',v=>expect(tis.bln(v)).toBe(true));
+        });
+        describe('false', () => {
+            test.each([null,undefined,NaN,0,'',0n,Symbol(),{},[],Map].map(x=>[x]))('%p',v=>expect(tis.bln(v)).toBe(false));
+        });
+    });
+    /*
     test("nun", () => {
         expect(tis.nun(undefined)).toBe(true);
         expect(tis.nun(null)).toBe(true);
         expect(tis.nun(NaN)).toBe(true);
         expect(tis.nun(0)).toBe(false);
     });
-
     test("und", () => {
         expect(tis.und(undefined)).toBe(true);
         expect(tis.und(null)).toBe(false);
@@ -80,6 +120,41 @@ describe("tis", () => {
         expect(tis.big(0n)).toBe(true);
         expect(tis.big(0)).toBe(false);
     });
+    */
+    describe("num", () => {
+        describe('true', () => {
+            test.each([NaN,Infinity,-Infinity,Number.EPSILON,Number.MAX_VALUE,-Number.MAX_VALUE,Number.MAX_SAFE_INTEGER,Number.MIN_SAFE_INTEGER,0,-1,0.1,Number()].map(x=>[x]))('%p',v=>expect(tis.num(v)).toBe(true));
+        });
+        describe('false', () => {
+            test.each([new Number(),null,undefined,false,'','0',0n,Symbol(),{},[]].map(x=>[x]))('%p',v=>expect(tis.num(v)).toBe(false));
+        });
+    });
+    describe("fin", () => {
+        describe('true', () => {
+            test.each([0.1,Number.EPSILON,Number.MAX_SAFE_INTEGER,Number.MIN_SAFE_INTEGER,0,-1,Number()].map(x=>[x]))('%p',v=>expect(tis.fin(v)).toBe(true));
+        });
+        describe('false', () => {
+            test.each([NaN,Infinity,-Infinity,Number.MAX_VALUE,-Number.MAX_VALUE,new Number(),null,undefined,false,'','0',0n,Symbol(),{},[]].map(x=>[x]))('%p',v=>expect(tis.fin(v)).toBe(false));
+        });
+    });
+    describe("int", () => {
+        describe('true', () => {
+            test.each([Number.MAX_SAFE_INTEGER,Number.MIN_SAFE_INTEGER,0,-1,Number()].map(x=>[x]))('%p',v=>expect(tis.int(v)).toBe(true));
+        });
+        describe('false', () => {
+            test.each([0.1,Number.EPSILON,NaN,Infinity,-Infinity,Number.MAX_VALUE,-Number.MAX_VALUE,new Number(),null,undefined,false,'','0',0n,Symbol(),{},[]].map(x=>[x]))('%p',v=>expect(tis.int(v)).toBe(false));
+        });
+    });
+    describe("big", () => {
+        describe('true', () => {
+            test.each([0n, BigInt(0), BigInt('0')].map(x=>[x]))('%p',v=>expect(tis.big(v)).toBe(true));
+        });
+        describe('false', () => {
+            test.each([Number.MAX_SAFE_INTEGER,Number.MIN_SAFE_INTEGER,0,-1,Number(),0.1,Number.EPSILON,NaN,Infinity,-Infinity,Number.MAX_VALUE,-Number.MAX_VALUE,new Number(),null,undefined,false,'','0',Symbol(),{},[]].map(x=>[x]))('%p',v=>expect(tis.big(v)).toBe(false));
+        });
+    });
+
+
     test("str", () => {
         expect(tis.str('0')).toBe(true);
         expect(tis.str(0)).toBe(false);
