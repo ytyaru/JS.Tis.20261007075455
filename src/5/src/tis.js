@@ -39,7 +39,24 @@ export const tis = {
     ary: (v,fn)=>Array.isArray(v) && (fn ? v.every(x=>fn(x)) : true),
     pob: v=>isObj(v) && Object.prototype===Object.getPrototypeOf(v), // Plain Object
     nob: v=>isObj(v) && null===Object.getPrototypeOf(v),             // None Prototype Object
-    ins: (v,C)=>v instanceof C,
+//    ins: (v,C)=>v instanceof C,
+    /*
+    ins: (v,C)=>{
+        if (!isO(v) || Array.isArray(v)) return false;
+        const proto = Object.getPrototypeOf(v);
+        return proto !== null && 
+               proto !== Object.prototype && 
+               Object.hasOwn(proto, 'constructor') &&
+               C ? v instanceof C : true;
+    },
+    */
+    ins: (v,C)=>{
+        if (!isObj(v) || Array.isArray(v)) return false;
+        const proto = Object.getPrototypeOf(v);
+        if (proto === null || proto === Object.prototype) return false;
+        const ctor = proto.constructor;
+        return typeof ctor === 'function' && ctor.prototype === proto && (C ? v instanceof C : true);
+    },
     run: isFn,
     cls: isConstructor,
 };

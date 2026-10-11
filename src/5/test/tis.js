@@ -1,7 +1,7 @@
 // math.test.js
 import { expect, test, describe } from "bun:test";
 import { tis } from "../src/tis.js";
-
+import { assertThrow } from "./assert-throw.js";
 class C {static sm() {} static *sgm() {yield 0}}
 describe("tis", () => {
     test("nun", () => {
@@ -135,6 +135,7 @@ describe("tis", () => {
         expect(tis.obj(C.sm)).toBe(false);
         expect(tis.obj(C.sgm)).toBe(false);
     });
+    /*
     test("ary", () => {
         expect(tis.ary([])).toBe(true);
 
@@ -163,6 +164,54 @@ describe("tis", () => {
         expect(tis.ary([0],tis.str)).toBe(false);
         expect(tis.ary([0,'0'],tis.int)).toBe(false);
     });
+    */
+    describe('ary',()=>{
+        describe('(v)',()=>{
+            test("ary", () => {
+                expect(tis.ary([])).toBe(true);
+
+                expect(tis.ary({})).toBe(false);
+                expect(tis.ary(Object.create(null))).toBe(false);
+                expect(tis.ary(new Boolean())).toBe(false);
+                expect(tis.ary(new Number())).toBe(false);
+                expect(tis.ary(new String())).toBe(false);
+
+                expect(tis.ary(new Map())).toBe(false);
+                expect(tis.ary(new C())).toBe(false);
+                expect(tis.ary((new (function(){})()))).toBe(false);
+
+                expect(tis.ary(Map)).toBe(false);
+                expect(tis.ary(C)).toBe(false);
+                expect(tis.ary([].map)).toBe(false);
+                expect(tis.ary(()=>{})).toBe(false);
+                expect(tis.ary(function(){})).toBe(false);
+                expect(tis.ary(C.sm)).toBe(false);
+                expect(tis.ary(C.sgm)).toBe(false);
+            });
+        });
+        describe('(v,C)',()=>{
+            describe('正常系',()=>{
+                describe('true',()=>{
+                    expect(tis.ary([], v=>true)).toBe(true);
+                    expect(tis.ary([], v=>false)).toBe(true);
+                    expect(tis.ary([0,1,2], tis.int)).toBe(true);
+
+                });
+                describe('false',()=>{
+                    expect(tis.ary([0,1,2], tis.str)).toBe(false);
+                    expect(tis.ary(['0',0], tis.str)).toBe(false);
+
+                });
+
+            });
+            describe('異常系',()=>{
+
+            });
+
+        });
+
+    });
+
 
     test("pob", () => {
         expect(tis.pob({})).toBe(true);
@@ -206,9 +255,40 @@ describe("tis", () => {
         expect(tis.nob(C.sm)).toBe(false);
         expect(tis.nob(C.sgm)).toBe(false);
     });
+    describe('ins',()=>{
+        const MyEs5Cls = function(){};
+        describe('(v)',()=>{
+            describe('true',()=>{
+                test.each([new Map(), new C(), new MyEs5Cls(), new Boolean(), new Number(), new String()].map(v=>[v]))('%p',v=>{
+                    expect(tis.ins(v)).toBe(true);
+                });
+            });
+            describe('false',()=>{
+                test.each([{},[],Map,C,MyEs5Cls,Boolean,Number,String,()=>{},function(){},C.sm,C.sgm,Object.create(null)].map(v=>[v]))('%p',v=>{
+                    expect(tis.ins(v)).toBe(false);
+                });
+            });
+        });
+        describe('(v,C)',()=>{
+            describe('true',()=>{
+                test.each([[new Map(),Map], [new C(),C], [new MyEs5Cls(),MyEs5Cls], [new Boolean(), Boolean], [new Number(),Number], [new String(),String]])('%p',(v,C)=>{
+                    expect(tis.ins(v,C)).toBe(true);
+                });
+            });
+            describe('false',()=>{
+                test.each([[{},Object],[[],Array],[Map,Map],[C,C],[MyEs5Cls,MyEs5Cls],[Boolean,Boolean],[Number,Number],[String,String],[()=>{},Function],[function(){},Function],[C.sm,Function],[C.sgm,Function],[Object.create(null),Object]])('%p',(v,C)=>{
+                    expect(tis.ins(v,C)).toBe(false);
+                });
+            });
+            describe('例外',()=>{
+                assertThrow(TypeError, 'Right hand side of instanceof is not an object', ()=>tis.ins(new C(),1))
+            });
+        });
+    });
+    /*
     test("ins", () => {
-        expect(tis.ins({}, Object)).toBe(true);
-        expect(tis.ins([], Array)).toBe(true);
+//        expect(tis.ins({}, Object)).toBe(true);
+//        expect(tis.ins([], Array)).toBe(true);
         expect(tis.ins(new Boolean(), Boolean)).toBe(true);
         expect(tis.ins(new Number(), Number)).toBe(true);
         expect(tis.ins(new String(), String)).toBe(true);
@@ -218,11 +298,18 @@ describe("tis", () => {
         const MyEs5Cls = function(){};
         expect(tis.ins(new MyEs5Cls(), MyEs5Cls)).toBe(true);
 
-        expect(tis.ins([].map, Function)).toBe(true);
-        expect(tis.ins(()=>{}, Function)).toBe(true);
-        expect(tis.ins(function(){}, Function)).toBe(true);
-        expect(tis.ins(C.sm, Function)).toBe(true);
-        expect(tis.ins(C.sgm, Function)).toBe(true);
+//        expect(tis.ins([].map, Function)).toBe(true);
+//        expect(tis.ins(()=>{}, Function)).toBe(true);
+//        expect(tis.ins(function(){}, Function)).toBe(true);
+//        expect(tis.ins(C.sm, Function)).toBe(true);
+//        expect(tis.ins(C.sgm, Function)).toBe(true);
+
+        expect(tis.ins({}, Object)).toBe(false);
+        expect(tis.ins([], Array)).toBe(false);
+        expect(tis.ins(()=>{}, Function)).toBe(false);
+        expect(tis.ins(function(){}, Function)).toBe(false);
+        expect(tis.ins(C.sm, Function)).toBe(false);
+        expect(tis.ins(C.sgm, Function)).toBe(false);
 
         // 非直感的。ObjectなのにPrototypeがないだけでObjectのインスタンスでないことになってしまう！
         //expect(tis.ins(Object.create(null), Object)).toBe(true); // 
@@ -231,6 +318,7 @@ describe("tis", () => {
         expect(tis.ins(Map, Map)).toBe(false);
         expect(tis.ins(C, C)).toBe(false);
     });
+    */
     test("run", () => {
         expect(tis.run([].map)).toBe(true);
         expect(tis.run(()=>{})).toBe(true);
