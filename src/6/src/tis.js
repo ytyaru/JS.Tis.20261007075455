@@ -66,3 +66,4 @@ export const tis = {
     run: isFn,
     cls: isConstructor,
 };
+

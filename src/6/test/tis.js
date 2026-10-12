@@ -203,7 +203,7 @@ describe("tis", () => {
         describe('true', () => {
             test.each([Map,C].map(x=>[x]))('%p',v=>expect(tis.cls(v)).toBe(true));
             // functionでも名前の先頭が大文字ならクラスと判定する
-            test.each([function Fn(){},function FN(){}].map(x=>[x]))('%p',v=>expect(tis.run(v)).toBe(true));
+            test.each([function Fn(){},function FN(){}].map(x=>[x]))('%p',v=>expect(tis.cls(v)).toBe(true));
         });
         describe('false', () => {
             test.each([function(){},function fN(){},function fn(){}].map(x=>[x]))('%p',v=>expect(tis.cls(v)).toBe(false));
@@ -212,30 +212,18 @@ describe("tis", () => {
             test.each([null,undefined,NaN,0,-1,0.1,Infinity,-Infinity,Number.EPSILON,Number.MAX_SAFE_INTEGER,Number.MIN_SAFE_INTEGER,Number.MAX_VALUE,-Number.MAX_VALUE,Number(),false,0n,'',Symbol()].map(x=>[x]))('%p',v=>expect(tis.cls(v)).toBe(false));
         });
     });
-    test("cls.es6", () => {
-        expect(tis.cls.es6(C)).toBe(true);
-
-        // ES5クラスもどきになりうるfunctionは明確に対象外
-        expect(tis.cls.es6(function(){})).toBe(false);
-        // Native Class は明確に対象外
-        expect(tis.cls.es6(Map)).toBe(false);
-
-        expect(tis.cls.es6([].map)).toBe(false);
-        expect(tis.cls.es6(()=>{})).toBe(false);
-        expect(tis.cls.es6(C.sm)).toBe(false);
-        expect(tis.cls.es6(C.sgm)).toBe(false);
-
-        expect(tis.cls.es6({})).toBe(false);
-        expect(tis.cls.es6([])).toBe(false);
-        expect(tis.cls.es6(new Boolean())).toBe(false);
-        expect(tis.cls.es6(new Number())).toBe(false);
-        expect(tis.cls.es6(new String())).toBe(false);
-
-        expect(tis.cls.es6(new Map())).toBe(false);
-        expect(tis.cls.es6(new C())).toBe(false);
-        const MyEs5Cls = function(){};
-        expect(tis.cls.es6(new MyEs5Cls())).toBe(false);
-        expect(tis.cls.es6(Object.create(null))).toBe(false); // 
+    describe("cls.es6", () => {
+        describe('true', () => {
+            test.each([C].map(x=>[x]))('%p',v=>expect(tis.cls.es6(v)).toBe(true));
+        });
+        describe('false', () => {
+            test.each([Map].map(x=>[x]))('%p',v=>expect(tis.cls.es6(v)).toBe(false));
+            test.each([function Fn(){},function FN(){}].map(x=>[x]))('%p',v=>expect(tis.cls.es6(v)).toBe(false));
+            test.each([function(){},function fN(){},function fn(){}].map(x=>[x]))('%p',v=>expect(tis.cls.es6(v)).toBe(false));
+            test.each([[].map,()=>{},function(){},C.sm,C.sgm].map(x=>[x]))('%p',v=>expect(tis.cls.es6(v)).toBe(false));
+            test.each([{},[],Object.create(null),Object.create({}),new Boolean(),new Number(),new String(),new Map(),new C(),(new (function(){})())].map(x=>[x]))('%p',v=>expect(tis.cls.es6(v)).toBe(false));
+            test.each([null,undefined,NaN,0,-1,0.1,Infinity,-Infinity,Number.EPSILON,Number.MAX_SAFE_INTEGER,Number.MIN_SAFE_INTEGER,Number.MAX_VALUE,-Number.MAX_VALUE,Number(),false,0n,'',Symbol()].map(x=>[x]))('%p',v=>expect(tis.cls.es6(v)).toBe(false));
+        });
     });
 });
 
