@@ -2,7 +2,7 @@ const isObj = v=>null!==v && 'object'===typeof v;
 //const isFn = v=>'function'===typeof v;
 //const isFn = (v,f)=>'function'===typeof v && (f ? v.constructor.name === 'Function' : true);
 //const isFn = (v,f)=>'function'===typeof v && (f ? v.constructor.name === getFnNm(f) : true);
-const isFn = (v,f)=>'function'===typeof v && (f ? v.constructor.name === getFnNm(f) : true);
+const isFn = (v,f)=>'function'===typeof v && (f ? v.constructor.name === `${getFnNm(f)}Function` : true);
 const fnNms = Object.freeze({
     's':'',
     'a':'Async',
@@ -17,7 +17,9 @@ const getFnNm = f => fnNms[f] ?? (() => { throw new TypeError(`Invalid f. Valid 
 const isNum = v=>'number'===typeof v;
 const isConstructor = v => {
     if (typeof v !== 'function') return false;
-    if (fnInCode(v)) return 0<v.name.length && /^[A-Z]/.test(v.name); // functionなら先頭一字目が大文字ならクラスと判定
+    if (isFn(v,'s')) return /^[A-Z]/.test(v.name); // functionなら先頭一字目が大文字ならクラスと判定
+//    if (isFn(v,'s')) return 0<v.name.length && /^[A-Z]/.test(v.name); // functionなら先頭一字目が大文字ならクラスと判定
+//    if (fnInCode(v)) return 0<v.name.length && /^[A-Z]/.test(v.name); // functionなら先頭一字目が大文字ならクラスと判定
     try { // 中身を実行させないために、ダミーのProxyを挟んでnewを試みる
         const TargetProxy = new Proxy(v, { construct() { return {}; } });
         new TargetProxy();
@@ -30,11 +32,11 @@ const getCode = v => isFn(v) ? Function.prototype.toString.call(v)
     .replace(/(["'`])(?:(?!\1)[^\\]|\\.)*?\1/g, '""') // 文字列リテラル（'' , "" , ``）を空文字に置換
     .replace(/\/([^\/\n\\]|\\.)+\/[gimsuy]*/g, '//') : ''; // 正規表現リテラルを除外
 isConstructor.es6 = v => /^\s*class\b/.test(getCode(v)); 
-const fnInCode = v => /^\s*function\b/.test(getCode(v)); 
-const isSFn = v => isFn(v) && v.constructor.name === 'Function';
-const isAFn = v => isFn(v) && v.constructor.name === 'AsyncFunction';
-const isGFn = v => isFn(v) && v.constructor.name === 'GeneratorFunction';
-const isAGFn = v => isFn(v) && v.constructor.name === 'AsyncGeneratorFunction';
+//const fnInCode = v => /^\s*function\b/.test(getCode(v)); 
+//const isSFn = v => isFn(v) && v.constructor.name === 'Function';
+//const isAFn = v => isFn(v) && v.constructor.name === 'AsyncFunction';
+//const isGFn = v => isFn(v) && v.constructor.name === 'GeneratorFunction';
+//const isAGFn = v => isFn(v) && v.constructor.name === 'AsyncGeneratorFunction';
 export const tis = {
     nun: v=>'und nul nan'.split(' ').some(n=>tis[n](v)),
     und: v=>undefined===v,

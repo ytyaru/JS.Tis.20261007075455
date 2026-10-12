@@ -203,10 +203,10 @@ describe("tis", () => {
         describe('true', () => {
             test.each([Map,C].map(x=>[x]))('%p',v=>expect(tis.cls(v)).toBe(true));
             // functionでも名前の先頭が大文字ならクラスと判定する
-            test.each([function Fn(){}].map(x=>[x]))('%p',v=>expect(tis.run(v)).toBe(true));
+            test.each([function Fn(){},function FN(){}].map(x=>[x]))('%p',v=>expect(tis.run(v)).toBe(true));
         });
         describe('false', () => {
-            test.each([function(){},function fn(){}].map(x=>[x]))('%p',v=>expect(tis.cls(v)).toBe(false));
+            test.each([function(){},function fN(){},function fn(){}].map(x=>[x]))('%p',v=>expect(tis.cls(v)).toBe(false));
             test.each([[].map,()=>{},function(){},C.sm,C.sgm].map(x=>[x]))('%p',v=>expect(tis.cls(v)).toBe(false));
             test.each([{},[],Object.create(null),Object.create({}),new Boolean(),new Number(),new String(),new Map(),new C(),(new (function(){})())].map(x=>[x]))('%p',v=>expect(tis.cls(v)).toBe(false));
             test.each([null,undefined,NaN,0,-1,0.1,Infinity,-Infinity,Number.EPSILON,Number.MAX_SAFE_INTEGER,Number.MIN_SAFE_INTEGER,Number.MAX_VALUE,-Number.MAX_VALUE,Number(),false,0n,'',Symbol()].map(x=>[x]))('%p',v=>expect(tis.cls(v)).toBe(false));
