@@ -1,7 +1,8 @@
 const isObj = v=>null!==v && 'object'===typeof v;
-const isFn = v=>'function'===typeof v;
+//const isFn = v=>'function'===typeof v;
 //const isFn = (v,f)=>'function'===typeof v && (f ? v.constructor.name === 'Function' : true);
 //const isFn = (v,f)=>'function'===typeof v && (f ? v.constructor.name === getFnNm(f) : true);
+const isFn = (v,f)=>'function'===typeof v && (f ? v.constructor.name === getFnNm(f) : true);
 const fnNms = Object.freeze({
     's':'',
     'a':'Async',
