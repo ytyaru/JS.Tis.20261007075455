@@ -263,5 +263,53 @@ describe("tis", () => {
             test.each([null,undefined,NaN,0,-1,0.1,Infinity,-Infinity,Number.EPSILON,Number.MAX_SAFE_INTEGER,Number.MIN_SAFE_INTEGER,Number.MAX_VALUE,-Number.MAX_VALUE,Number(),false,0n,'',Symbol()].map(x=>[x]))('%p',v=>expect(tis.fn.s(v)).toBe(false));
         });
     });
+    describe("fn.g", () => {
+        describe('true', () => {
+            test.each([C.sgm].map(x=>[x]))('%p',v=>expect(tis.fn.g(v)).toBe(true));
+        });
+        describe('false', () => {
+            test.each([C.sam,C.sagm].map(x=>[x]))('%p',v=>expect(tis.fn.g(v)).toBe(false));
+            test.each([function(){},function fN(){},function fn(){}].map(x=>[x]))('%p',v=>expect(tis.fn.g(v)).toBe(false));
+            test.each([[].map,(function(){}).bind(null),()=>{},function(){},C.sm].map(x=>[x]))('%p',v=>expect(tis.fn.g(v)).toBe(false));
+            //test.each([async()=>{},C.sgm,C.sam,C.sagm].map(x=>[x]))('%p',v=>expect(tis.fn.g(v)).toBe(false));
+            // functionでも名前の先頭が大文字ならクラスと判定する
+            test.each([function Fn(){},function FN(){}].map(x=>[x]))('%p',v=>expect(tis.fn.g(v)).toBe(false));
+            test.each([Map,C].map(x=>[x]))('%p',v=>expect(tis.fn.g(v)).toBe(false));
+            test.each([{},[],Object.create(null),Object.create({}),new Boolean(),new Number(),new String(),new Map(),new C(),(new (function(){})())].map(x=>[x]))('%p',v=>expect(tis.fn.g(v)).toBe(false));
+            test.each([null,undefined,NaN,0,-1,0.1,Infinity,-Infinity,Number.EPSILON,Number.MAX_SAFE_INTEGER,Number.MIN_SAFE_INTEGER,Number.MAX_VALUE,-Number.MAX_VALUE,Number(),false,0n,'',Symbol()].map(x=>[x]))('%p',v=>expect(tis.fn.g(v)).toBe(false));
+        });
+    });
+    describe("fn.a", () => {
+        describe('true', () => {
+            test.each([C.sam].map(x=>[x]))('%p',v=>expect(tis.fn.a(v)).toBe(true));
+        });
+        describe('false', () => {
+            test.each([C.sgm,C.sagm].map(x=>[x]))('%p',v=>expect(tis.fn.a(v)).toBe(false));
+            test.each([function(){},function fN(){},function fn(){}].map(x=>[x]))('%p',v=>expect(tis.fn.a(v)).toBe(false));
+            test.each([[].map,(function(){}).bind(null),()=>{},function(){},C.sm].map(x=>[x]))('%p',v=>expect(tis.fn.a(v)).toBe(false));
+            //test.each([async()=>{},C.sgm,C.sam,C.sagm].map(x=>[x]))('%p',v=>expect(tis.fn.a(v)).toBe(false));
+            // functionでも名前の先頭が大文字ならクラスと判定する
+            test.each([function Fn(){},function FN(){}].map(x=>[x]))('%p',v=>expect(tis.fn.a(v)).toBe(false));
+            test.each([Map,C].map(x=>[x]))('%p',v=>expect(tis.fn.a(v)).toBe(false));
+            test.each([{},[],Object.create(null),Object.create({}),new Boolean(),new Number(),new String(),new Map(),new C(),(new (function(){})())].map(x=>[x]))('%p',v=>expect(tis.fn.a(v)).toBe(false));
+            test.each([null,undefined,NaN,0,-1,0.1,Infinity,-Infinity,Number.EPSILON,Number.MAX_SAFE_INTEGER,Number.MIN_SAFE_INTEGER,Number.MAX_VALUE,-Number.MAX_VALUE,Number(),false,0n,'',Symbol()].map(x=>[x]))('%p',v=>expect(tis.fn.a(v)).toBe(false));
+        });
+    });
+    describe("fn.ag", () => {
+        describe('true', () => {
+            test.each([C.sagm].map(x=>[x]))('%p',v=>expect(tis.fn.ag(v)).toBe(true));
+        });
+        describe('false', () => {
+            test.each([C.sam,C.sgm].map(x=>[x]))('%p',v=>expect(tis.fn.ag(v)).toBe(false));
+            test.each([function(){},function fN(){},function fn(){}].map(x=>[x]))('%p',v=>expect(tis.fn.ag(v)).toBe(false));
+            test.each([[].map,(function(){}).bind(null),()=>{},function(){},C.sm].map(x=>[x]))('%p',v=>expect(tis.fn.ag(v)).toBe(false));
+            //test.each([async()=>{},C.sgm,C.sam,C.sagm].map(x=>[x]))('%p',v=>expect(tis.fn.ag(v)).toBe(false));
+            // functionでも名前の先頭が大文字ならクラスと判定する
+            test.each([function Fn(){},function FN(){}].map(x=>[x]))('%p',v=>expect(tis.fn.ag(v)).toBe(false));
+            test.each([Map,C].map(x=>[x]))('%p',v=>expect(tis.fn.ag(v)).toBe(false));
+            test.each([{},[],Object.create(null),Object.create({}),new Boolean(),new Number(),new String(),new Map(),new C(),(new (function(){})())].map(x=>[x]))('%p',v=>expect(tis.fn.ag(v)).toBe(false));
+            test.each([null,undefined,NaN,0,-1,0.1,Infinity,-Infinity,Number.EPSILON,Number.MAX_SAFE_INTEGER,Number.MIN_SAFE_INTEGER,Number.MAX_VALUE,-Number.MAX_VALUE,Number(),false,0n,'',Symbol()].map(x=>[x]))('%p',v=>expect(tis.fn.ag(v)).toBe(false));
+        });
+    });
 });
 
