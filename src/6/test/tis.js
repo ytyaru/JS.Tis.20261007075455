@@ -1,0 +1,241 @@
+// math.test.js
+import { expect, test, describe } from "bun:test";
+import { tis } from "../src/tis.js";
+import { assertThrow } from "./assert-throw.js";
+class C {static sm() {} static *sgm() {yield 0}}
+describe("tis", () => {
+    describe("nun", () => {
+        describe('true', () => {
+            test.each([undefined,null,NaN].map(x=>[x]))('%p',v=>expect(tis.nun(v)).toBe(true));
+        });
+        describe('false', () => {
+            test.each([false,0,'',0n,Symbol(),{},[],Map].map(x=>[x]))('%p',v=>expect(tis.nun(v)).toBe(false));
+        });
+    });
+    describe("nul", () => {
+        describe('true', () => {
+            test.each([null].map(x=>[x]))('%p',v=>expect(tis.nul(v)).toBe(true));
+        });
+        describe('false', () => {
+            test.each([undefined,NaN,false,0,'',0n,Symbol(),{},[],Map].map(x=>[x]))('%p',v=>expect(tis.nul(v)).toBe(false));
+        });
+    });
+    describe("und", () => {
+        describe('true', () => {
+            test.each([undefined].map(x=>[x]))('%p',v=>expect(tis.und(v)).toBe(true));
+        });
+        describe('false', () => {
+            test.each([null,NaN,false,0,'',0n,Symbol(),{},[],Map].map(x=>[x]))('%p',v=>expect(tis.und(v)).toBe(false));
+        });
+    });
+    describe("nan", () => {
+        describe('true', () => {
+            test.each([NaN].map(x=>[x]))('%p',v=>expect(tis.nan(v)).toBe(true));
+        });
+        describe('false', () => {
+            test.each([null,undefined,false,0,'',0n,Symbol(),{},[],Map].map(x=>[x]))('%p',v=>expect(tis.nan(v)).toBe(false));
+        });
+    });
+    describe("bln", () => {
+        describe('true', () => {
+            test.each([false,true].map(x=>[x]))('%p',v=>expect(tis.bln(v)).toBe(true));
+        });
+        describe('false', () => {
+            test.each([null,undefined,NaN,0,'',0n,Symbol(),{},[],Map].map(x=>[x]))('%p',v=>expect(tis.bln(v)).toBe(false));
+        });
+    });
+    describe("num", () => {
+        describe('true', () => {
+            test.each([NaN,Infinity,-Infinity,Number.EPSILON,Number.MAX_VALUE,-Number.MAX_VALUE,Number.MAX_SAFE_INTEGER,Number.MIN_SAFE_INTEGER,0,-1,0.1,Number()].map(x=>[x]))('%p',v=>expect(tis.num(v)).toBe(true));
+        });
+        describe('false', () => {
+            test.each([new Number(),null,undefined,false,'','0',0n,Symbol(),{},[]].map(x=>[x]))('%p',v=>expect(tis.num(v)).toBe(false));
+        });
+    });
+    describe("fin", () => {
+        describe('true', () => {
+            test.each([0.1,Number.EPSILON,Number.MAX_SAFE_INTEGER,Number.MIN_SAFE_INTEGER,0,-1,Number()].map(x=>[x]))('%p',v=>expect(tis.fin(v)).toBe(true));
+        });
+        describe('false', () => {
+            test.each([NaN,Infinity,-Infinity,Number.MAX_VALUE,-Number.MAX_VALUE,new Number(),null,undefined,false,'','0',0n,Symbol(),{},[]].map(x=>[x]))('%p',v=>expect(tis.fin(v)).toBe(false));
+        });
+    });
+    describe("int", () => {
+        describe('true', () => {
+            test.each([Number.MAX_SAFE_INTEGER,Number.MIN_SAFE_INTEGER,0,-1,Number()].map(x=>[x]))('%p',v=>expect(tis.int(v)).toBe(true));
+        });
+        describe('false', () => {
+            test.each([0.1,Number.EPSILON,NaN,Infinity,-Infinity,Number.MAX_VALUE,-Number.MAX_VALUE,new Number(),null,undefined,false,'','0',0n,Symbol(),{},[]].map(x=>[x]))('%p',v=>expect(tis.int(v)).toBe(false));
+        });
+    });
+    describe("big", () => {
+        describe('true', () => {
+            test.each([0n, BigInt(0), BigInt('0')].map(x=>[x]))('%p',v=>expect(tis.big(v)).toBe(true));
+        });
+        describe('false', () => {
+            test.each([Number.MAX_SAFE_INTEGER,Number.MIN_SAFE_INTEGER,0,-1,Number(),0.1,Number.EPSILON,NaN,Infinity,-Infinity,Number.MAX_VALUE,-Number.MAX_VALUE,new Number(),null,undefined,false,'','0',Symbol(),{},[]].map(x=>[x]))('%p',v=>expect(tis.big(v)).toBe(false));
+        });
+    });
+    describe("str", () => {
+        describe('true', () => {
+            test.each(['','0',String()].map(x=>[x]))('%p',v=>expect(tis.str(v)).toBe(true));
+        });
+        describe('false', () => {
+            test.each([new String(),Number.MAX_SAFE_INTEGER,Number.MIN_SAFE_INTEGER,0,-1,Number(),0.1,Number.EPSILON,NaN,Infinity,-Infinity,Number.MAX_VALUE,-Number.MAX_VALUE,new Number(),null,undefined,false,0n,Symbol(),{},[]].map(x=>[x]))('%p',v=>expect(tis.str(v)).toBe(false));
+        });
+    });
+    describe("sym", () => {
+        describe('true', () => {
+            test.each([Symbol(), Symbol.for('x')].map(x=>[x]))('%p',v=>expect(tis.sym(v)).toBe(true));
+        });
+        describe('false', () => {
+            test.each([Number.MAX_SAFE_INTEGER,Number.MIN_SAFE_INTEGER,0,-1,Number(),0.1,Number.EPSILON,NaN,Infinity,-Infinity,Number.MAX_VALUE,-Number.MAX_VALUE,new Number(),null,undefined,false,0n,'',{},[]].map(x=>[x]))('%p',v=>expect(tis.sym(v)).toBe(false));
+        });
+    });
+    // Reference
+    describe("ref", () => {
+        describe('true', () => {
+            test.each([{},[],Object.create(null),Object.create({}),new Boolean(),new Number(),new String(),new Map(),new C(),Map,C,[].map,()=>{},function(){},C.sm,C.sgm,(new (function(){})())].map(x=>[x]))('%p',v=>expect(tis.ref(v)).toBe(true));
+        });
+        describe('false', () => {
+            test.each([null,undefined,NaN,0,-1,0.1,Infinity,-Infinity,Number.EPSILON,Number.MAX_SAFE_INTEGER,Number.MIN_SAFE_INTEGER,Number.MAX_VALUE,-Number.MAX_VALUE,Number(),false,0n,'',Symbol()].map(x=>[x]))('%p',v=>expect(tis.ref(v)).toBe(false));
+        });
+    });
+    describe("obj", () => {
+        describe('true', () => {
+            test.each([{},[],Object.create(null),Object.create({}),new Boolean(),new Number(),new String(),new Map(),new C(),(new (function(){})())].map(x=>[x]))('%p',v=>expect(tis.obj(v)).toBe(true));
+        });
+        describe('false', () => {
+            test.each([Map,C,[].map,()=>{},function(){},C.sm,C.sgm].map(x=>[x]))('%p',v=>expect(tis.obj(v)).toBe(false));
+            test.each([null,undefined,NaN,0,-1,0.1,Infinity,-Infinity,Number.EPSILON,Number.MAX_SAFE_INTEGER,Number.MIN_SAFE_INTEGER,Number.MAX_VALUE,-Number.MAX_VALUE,Number(),false,0n,'',Symbol()].map(x=>[x]))('%p',v=>expect(tis.obj(v)).toBe(false));
+        });
+    });
+    describe('ary',()=>{
+        class A extends Array{}
+        describe('(v)',()=>{
+            describe('true',()=>{
+                test.each([[],[0],[''],[0,''],new A()].map(x=>[x]))('%p',v=>{
+                    expect(tis.ary(v)).toBe(true);
+                });
+            });
+            describe('false',()=>{
+                test.each([{},Object.create(null),new Boolean(),new Number(),new String(),new Map(),new C(),(new (function(){})()),Map,C,[].map,()=>{},function(){},C.sm,C.sgm].map(x=>[x]))('%p',v=>{
+                    expect(tis.ary(v)).toBe(false);
+                });
+            });
+        });
+        describe('(v,fn)',()=>{
+            describe('正常系',()=>{
+                describe('true',()=>{
+                    test.each([[[],v=>true],[[],v=>false],[[0],tis.int],[[0,1,2],tis.int],[['0','1','2'],tis.str]])('%p',(v,fn)=>expect(tis.ary(v,fn)).toBe(true));
+                });
+                describe('false',()=>{
+                    test.each([[[0,1,2],tis.str],[['0',0],tis.str]])('%p',(v,fn)=>expect(tis.ary(v,fn)).toBe(false));
+                });
+            });
+            describe('異常系',()=>{
+                // 第二引数にundefinedでも関数でもないものを渡す。数やコンストラクタなど。
+                assertThrow(TypeError, `fn is not a function. (In 'fn(x)', 'fn' is 1)`, ()=>tis.ary([1],1));
+                assertThrow(TypeError, `calling Map constructor without new is invalid`, ()=>tis.ary([1],Map));
+            });
+        });
+    });
+    describe("pob", () => {
+        describe('true', () => {
+            test.each([{}].map(x=>[x]))('%p',v=>expect(tis.pob(v)).toBe(true));
+        });
+        describe('false', () => {
+            test.each([[],Object.create(null),Object.create({}),new Boolean(),new Number(),new String(),new Map(),new C(),(new (function(){})())].map(x=>[x]))('%p',v=>expect(tis.pob(v)).toBe(false));
+            test.each([Map,C,[].map,()=>{},function(){},C.sm,C.sgm].map(x=>[x]))('%p',v=>expect(tis.pob(v)).toBe(false));
+            test.each([null,undefined,NaN,0,-1,0.1,Infinity,-Infinity,Number.EPSILON,Number.MAX_SAFE_INTEGER,Number.MIN_SAFE_INTEGER,Number.MAX_VALUE,-Number.MAX_VALUE,Number(),false,0n,'',Symbol()].map(x=>[x]))('%p',v=>expect(tis.pob(v)).toBe(false));
+        });
+    });
+    describe("nob", () => {
+        describe('true', () => {
+            test.each([Object.create(null)].map(x=>[x]))('%p',v=>expect(tis.nob(v)).toBe(true));
+        });
+        describe('false', () => {
+            test.each([[],{},Object.create({}),new Boolean(),new Number(),new String(),new Map(),new C(),(new (function(){})())].map(x=>[x]))('%p',v=>expect(tis.nob(v)).toBe(false));
+            test.each([Map,C,[].map,()=>{},function(){},C.sm,C.sgm].map(x=>[x]))('%p',v=>expect(tis.nob(v)).toBe(false));
+            test.each([null,undefined,NaN,0,-1,0.1,Infinity,-Infinity,Number.EPSILON,Number.MAX_SAFE_INTEGER,Number.MIN_SAFE_INTEGER,Number.MAX_VALUE,-Number.MAX_VALUE,Number(),false,0n,'',Symbol()].map(x=>[x]))('%p',v=>expect(tis.nob(v)).toBe(false));
+        });
+    });
+    describe('ins',()=>{
+        const MyEs5Cls = function(){};
+        describe('(v)',()=>{
+            describe('true',()=>{
+                test.each([new Map(), new C(), new MyEs5Cls(), new Boolean(), new Number(), new String()].map(v=>[v]))('%p',v=>{
+                    expect(tis.ins(v)).toBe(true);
+                });
+            });
+            describe('false',()=>{
+                test.each([{},[],Map,C,MyEs5Cls,Boolean,Number,String,()=>{},function(){},C.sm,C.sgm,Object.create(null)].map(v=>[v]))('%p',v=>{
+                    expect(tis.ins(v)).toBe(false);
+                });
+            });
+        });
+        describe('(v,C)',()=>{
+            describe('true',()=>{
+                test.each([[new Map(),Map], [new C(),C], [new MyEs5Cls(),MyEs5Cls], [new Boolean(), Boolean], [new Number(),Number], [new String(),String]])('%p',(v,C)=>{
+                    expect(tis.ins(v,C)).toBe(true);
+                });
+            });
+            describe('false',()=>{
+                test.each([[{},Object],[[],Array],[Map,Map],[C,C],[MyEs5Cls,MyEs5Cls],[Boolean,Boolean],[Number,Number],[String,String],[()=>{},Function],[function(){},Function],[C.sm,Function],[C.sgm,Function],[Object.create(null),Object]])('%p',(v,C)=>{
+                    expect(tis.ins(v,C)).toBe(false);
+                });
+            });
+            describe('例外',()=>{
+                assertThrow(TypeError, 'Right hand side of instanceof is not an object', ()=>tis.ins(new C(),1))
+            });
+        });
+    });
+    describe("run", () => {
+        describe('true', () => {
+            test.each([Map,C,[].map,()=>{},function(){},C.sm,C.sgm].map(x=>[x]))('%p',v=>expect(tis.run(v)).toBe(true));
+        });
+        describe('false', () => {
+            test.each([{},[],Object.create(null),Object.create({}),new Boolean(),new Number(),new String(),new Map(),new C(),(new (function(){})())].map(x=>[x]))('%p',v=>expect(tis.run(v)).toBe(false));
+            test.each([null,undefined,NaN,0,-1,0.1,Infinity,-Infinity,Number.EPSILON,Number.MAX_SAFE_INTEGER,Number.MIN_SAFE_INTEGER,Number.MAX_VALUE,-Number.MAX_VALUE,Number(),false,0n,'',Symbol()].map(x=>[x]))('%p',v=>expect(tis.run(v)).toBe(false));
+        });
+    });
+    describe("cls", () => {
+        describe('true', () => {
+            test.each([Map,C].map(x=>[x]))('%p',v=>expect(tis.cls(v)).toBe(true));
+            // functionでも名前の先頭が大文字ならクラスと判定する
+            test.each([function Fn(){}].map(x=>[x]))('%p',v=>expect(tis.run(v)).toBe(true));
+        });
+        describe('false', () => {
+            test.each([function(){},function fn(){}].map(x=>[x]))('%p',v=>expect(tis.cls(v)).toBe(false));
+            test.each([[].map,()=>{},function(){},C.sm,C.sgm].map(x=>[x]))('%p',v=>expect(tis.cls(v)).toBe(false));
+            test.each([{},[],Object.create(null),Object.create({}),new Boolean(),new Number(),new String(),new Map(),new C(),(new (function(){})())].map(x=>[x]))('%p',v=>expect(tis.cls(v)).toBe(false));
+            test.each([null,undefined,NaN,0,-1,0.1,Infinity,-Infinity,Number.EPSILON,Number.MAX_SAFE_INTEGER,Number.MIN_SAFE_INTEGER,Number.MAX_VALUE,-Number.MAX_VALUE,Number(),false,0n,'',Symbol()].map(x=>[x]))('%p',v=>expect(tis.cls(v)).toBe(false));
+        });
+    });
+    test("cls.es6", () => {
+        expect(tis.cls.es6(C)).toBe(true);
+
+        // ES5クラスもどきになりうるfunctionは明確に対象外
+        expect(tis.cls.es6(function(){})).toBe(false);
+        // Native Class は明確に対象外
+        expect(tis.cls.es6(Map)).toBe(false);
+
+        expect(tis.cls.es6([].map)).toBe(false);
+        expect(tis.cls.es6(()=>{})).toBe(false);
+        expect(tis.cls.es6(C.sm)).toBe(false);
+        expect(tis.cls.es6(C.sgm)).toBe(false);
+
+        expect(tis.cls.es6({})).toBe(false);
+        expect(tis.cls.es6([])).toBe(false);
+        expect(tis.cls.es6(new Boolean())).toBe(false);
+        expect(tis.cls.es6(new Number())).toBe(false);
+        expect(tis.cls.es6(new String())).toBe(false);
+
+        expect(tis.cls.es6(new Map())).toBe(false);
+        expect(tis.cls.es6(new C())).toBe(false);
+        const MyEs5Cls = function(){};
+        expect(tis.cls.es6(new MyEs5Cls())).toBe(false);
+        expect(tis.cls.es6(Object.create(null))).toBe(false); // 
+    });
+});
+
