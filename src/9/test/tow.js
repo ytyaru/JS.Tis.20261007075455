@@ -322,7 +322,7 @@ describe("tow", () => {
                 test.each([Map,C,function Fn(){},function FN(){}].map(x=>[x]))('%p',v=>expect(tow.cls(v)).toBe(true));
             });
             describe('throw', () => {
-                test.each([function(){},C.sm,function(){},function fN(){},function fn(){},C.sam,C.sgm,C.sagm,(function(){}).bind(null),[].map].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.cls(v)));
+                test.each([function(){},C.sm,function(){},function fN(){},function fn(){},C.sam,C.sgm,C.sagm,(function(){}).bind(null),[].map,()=>{},async()=>{}].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.cls(v)));
                 test.each([{},[],Object.create(null),Object.create({}),new Boolean(),new Number(),new String(),new Map(),new C(),(new (function(){})()),/^/,new RegExp('^')].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.cls(v)));
                 test.each([0,-1,0.1,Number.EPSILON,Number.MAX_SAFE_INTEGER,Number.MIN_SAFE_INTEGER,Number(),NaN,Infinity,-Infinity,Number.MAX_VALUE,-Number.MAX_VALUE,Number.MAX_SAFE_INTEGER+1,Number.MIN_SAFE_INTEGER-1].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.cls(v)));
                 test.each([false,true,Boolean(),undefined,null,'',0n,Symbol()].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.cls(v)));
@@ -365,6 +365,122 @@ describe("tow", () => {
                 test.each([{},[],Object.create(null),Object.create({}),new Boolean(),new Number(),new String(),new Map(),new C(),(new (function(){})()),/^/,new RegExp('^')].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.cls.nat(v)));
                 test.each([0,-1,0.1,Number.EPSILON,Number.MAX_SAFE_INTEGER,Number.MIN_SAFE_INTEGER,Number(),NaN,Infinity,-Infinity,Number.MAX_VALUE,-Number.MAX_VALUE,Number.MAX_SAFE_INTEGER+1,Number.MIN_SAFE_INTEGER-1].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.cls.nat(v)));
                 test.each([false,true,Boolean(),undefined,null,'',0n,Symbol()].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.cls.nat(v)));
+            });
+        });
+    });
+    describe('fn', () => {
+        describe('(v)', () => {
+            describe('true', () => {
+                test.each([function(){},C.sm,function(){},function fN(){},function fn(){},C.sam,C.sgm,C.sagm,(function(){}).bind(null),[].map,()=>{},async()=>{}].map(x=>[x]))('%p',v=>expect(tow.fn(v)).toBe(true));
+            });
+            describe('throw', () => {
+                test.each([Map,C,function Fn(){},function FN(){}].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn(v)));
+                test.each([{},[],Object.create(null),Object.create({}),new Boolean(),new Number(),new String(),new Map(),new C(),(new (function(){})()),/^/,new RegExp('^')].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn(v)));
+                test.each([0,-1,0.1,Number.EPSILON,Number.MAX_SAFE_INTEGER,Number.MIN_SAFE_INTEGER,Number(),NaN,Infinity,-Infinity,Number.MAX_VALUE,-Number.MAX_VALUE,Number.MAX_SAFE_INTEGER+1,Number.MIN_SAFE_INTEGER-1].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn(v)));
+                test.each([false,true,Boolean(),undefined,null,'',0n,Symbol()].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn(v)));
+            });
+        });
+        describe('nat', () => {
+            describe('(v)', () => {
+                describe('true', () => {
+                    test.each([[].map,(function(){}).bind(null)].map(x=>[x]))('%p',v=>expect(tow.fn.nat(v)).toBe(true));
+                });
+                describe('throw', () => {
+                    test.each([function(){},C.sm,function(){},function fN(){},function fn(){},C.sam,C.sgm,C.sagm,()=>{},async()=>{}].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn.nat(v)));
+                    test.each([Map,C,function Fn(){},function FN(){}].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn.nat(v)));
+                    test.each([{},[],Object.create(null),Object.create({}),new Boolean(),new Number(),new String(),new Map(),new C(),(new (function(){})()),/^/,new RegExp('^')].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn.nat(v)));
+                    test.each([0,-1,0.1,Number.EPSILON,Number.MAX_SAFE_INTEGER,Number.MIN_SAFE_INTEGER,Number(),NaN,Infinity,-Infinity,Number.MAX_VALUE,-Number.MAX_VALUE,Number.MAX_SAFE_INTEGER+1,Number.MIN_SAFE_INTEGER-1].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn.nat(v)));
+                    test.each([false,true,Boolean(),undefined,null,'',0n,Symbol()].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn.nat(v)));
+                });
+
+            });
+            describe('b', () => {
+                describe('true', () => {
+                    test.each([(function(){}).bind(null)].map(x=>[x]))('%p',v=>expect(tow.fn.nat.b(v)).toBe(true));
+                });
+                describe('throw', () => {
+                    test.each([function(){},C.sm,function(){},function fN(){},function fn(){},C.sam,C.sgm,C.sagm,[].map,()=>{},async()=>{}].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn.nat.b(v)));
+                    test.each([Map,C,function Fn(){},function FN(){}].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn.nat.b(v)));
+                    test.each([{},[],Object.create(null),Object.create({}),new Boolean(),new Number(),new String(),new Map(),new C(),(new (function(){})()),/^/,new RegExp('^')].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn.nat.b(v)));
+                    test.each([0,-1,0.1,Number.EPSILON,Number.MAX_SAFE_INTEGER,Number.MIN_SAFE_INTEGER,Number(),NaN,Infinity,-Infinity,Number.MAX_VALUE,-Number.MAX_VALUE,Number.MAX_SAFE_INTEGER+1,Number.MIN_SAFE_INTEGER-1].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn.nat.b(v)));
+                    test.each([false,true,Boolean(),undefined,null,'',0n,Symbol()].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn.nat.b(v)));
+                });
+            });
+            describe('nb', () => {
+                describe('true', () => {
+                    test.each([[].map].map(x=>[x]))('%p',v=>expect(tow.fn.nat.nb(v)).toBe(true));
+                });
+                describe('throw', () => {
+                    test.each([(function(){}).bind(null)].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn.nat.nb(v)));
+                    test.each([function(){},C.sm,function(){},function fN(){},function fn(){},C.sam,C.sgm,C.sagm,()=>{},async()=>{}].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn.nat.nb(v)));
+                    test.each([Map,C,function Fn(){},function FN(){}].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn.nat.nb(v)));
+                    test.each([{},[],Object.create(null),Object.create({}),new Boolean(),new Number(),new String(),new Map(),new C(),(new (function(){})()),/^/,new RegExp('^')].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn.nat.nb(v)));
+                    test.each([0,-1,0.1,Number.EPSILON,Number.MAX_SAFE_INTEGER,Number.MIN_SAFE_INTEGER,Number(),NaN,Infinity,-Infinity,Number.MAX_VALUE,-Number.MAX_VALUE,Number.MAX_SAFE_INTEGER+1,Number.MIN_SAFE_INTEGER-1].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn.nat.nb(v)));
+                    test.each([false,true,Boolean(),undefined,null,'',0n,Symbol()].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn.nat.nb(v)));
+                });
+            });
+        });
+        describe('s', () => {
+            describe('true', () => {
+                test.each([function(){},C.sm,function(){},function fN(){},function fn(){},(function(){}).bind(null),[].map,()=>{}].map(x=>[x]))('%p',v=>expect(tow.fn.s(v)).toBe(true));
+            });
+            describe('throw', () => {
+                test.each([C.sam,C.sgm,C.sagm,async()=>{}].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn.s(v)));
+                test.each([async function(){}, function*(){}, async function*(){}].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn.s(v)));
+                // 命名規則によりES5クラスと判定する
+                test.each([function Fn(){},function FN(){}].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn.s(v)));
+                test.each([Map,C].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn.s(v)));
+                test.each([{},[],Object.create(null),Object.create({}),new Boolean(),new Number(),new String(),new Map(),new C(),(new (function(){})()),/^/,new RegExp('^')].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn.s(v)));
+                test.each([0,-1,0.1,Number.EPSILON,Number.MAX_SAFE_INTEGER,Number.MIN_SAFE_INTEGER,Number(),NaN,Infinity,-Infinity,Number.MAX_VALUE,-Number.MAX_VALUE,Number.MAX_SAFE_INTEGER+1,Number.MIN_SAFE_INTEGER-1].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn.s(v)));
+                test.each([false,true,Boolean(),undefined,null,'',0n,Symbol()].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn.s(v)));
+            });
+        });
+        describe('g', () => {
+            describe('true', () => {
+                test.each([C.sgm,function*(){}].map(x=>[x]))('%p',v=>expect(tow.fn.g(v)).toBe(true));
+            });
+            describe('throw', () => {
+                test.each([function(){},C.sm,function(){},function fN(){},function fn(){},(function(){}).bind(null),[].map,()=>{}].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn.g(v)));
+                test.each([C.sam,C.sagm,async()=>{}].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn.g(v)));
+                test.each([async function(){}, async function*(){}].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn.g(v)));
+                // 命名規則によりES5クラスと判定する
+                test.each([function Fn(){},function FN(){}].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn.g(v)));
+                test.each([Map,C].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn.g(v)));
+                test.each([{},[],Object.create(null),Object.create({}),new Boolean(),new Number(),new String(),new Map(),new C(),(new (function(){})()),/^/,new RegExp('^')].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn.g(v)));
+                test.each([0,-1,0.1,Number.EPSILON,Number.MAX_SAFE_INTEGER,Number.MIN_SAFE_INTEGER,Number(),NaN,Infinity,-Infinity,Number.MAX_VALUE,-Number.MAX_VALUE,Number.MAX_SAFE_INTEGER+1,Number.MIN_SAFE_INTEGER-1].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn.g(v)));
+                test.each([false,true,Boolean(),undefined,null,'',0n,Symbol()].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn.g(v)));
+            });
+        });
+        describe('a', () => {
+            describe('true', () => {
+                test.each([C.sam,async()=>{},async function(){}].map(x=>[x]))('%p',v=>expect(tow.fn.a(v)).toBe(true));
+            });
+            describe('throw', () => {
+                test.each([C.sm,function(){},function(){},function fN(){},function fn(){},(function(){}).bind(null),[].map,()=>{}].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn.a(v)));
+                test.each([C.sagm,async function*(){}].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn.a(v)));
+                test.each([C.sgm,function*(){}].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn.a(v)));
+                // 命名規則によりES5クラスと判定する
+                test.each([function Fn(){},function FN(){}].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn.a(v)));
+                test.each([Map,C].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn.a(v)));
+                test.each([{},[],Object.create(null),Object.create({}),new Boolean(),new Number(),new String(),new Map(),new C(),(new (function(){})()),/^/,new RegExp('^')].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn.a(v)));
+                test.each([0,-1,0.1,Number.EPSILON,Number.MAX_SAFE_INTEGER,Number.MIN_SAFE_INTEGER,Number(),NaN,Infinity,-Infinity,Number.MAX_VALUE,-Number.MAX_VALUE,Number.MAX_SAFE_INTEGER+1,Number.MIN_SAFE_INTEGER-1].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn.a(v)));
+                test.each([false,true,Boolean(),undefined,null,'',0n,Symbol()].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn.a(v)));
+            });
+        });
+        describe('ag', () => {
+            describe('true', () => {
+                test.each([C.sagm,async function*(){}].map(x=>[x]))('%p',v=>expect(tow.fn.ag(v)).toBe(true));
+            });
+            describe('throw', () => {
+                test.each([C.sm,function(){},function(){},function fN(){},function fn(){},(function(){}).bind(null),[].map,()=>{}].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn.ag(v)));
+                test.each([C.sam,async()=>{},async function(){}].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn.ag(v)));
+                test.each([C.sgm,function*(){}].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn.ag(v)));
+                // 命名規則によりES5クラスと判定する
+                test.each([function Fn(){},function FN(){}].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn.ag(v)));
+                test.each([Map,C].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn.ag(v)));
+                test.each([{},[],Object.create(null),Object.create({}),new Boolean(),new Number(),new String(),new Map(),new C(),(new (function(){})()),/^/,new RegExp('^')].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn.ag(v)));
+                test.each([0,-1,0.1,Number.EPSILON,Number.MAX_SAFE_INTEGER,Number.MIN_SAFE_INTEGER,Number(),NaN,Infinity,-Infinity,Number.MAX_VALUE,-Number.MAX_VALUE,Number.MAX_SAFE_INTEGER+1,Number.MIN_SAFE_INTEGER-1].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn.ag(v)));
+                test.each([false,true,Boolean(),undefined,null,'',0n,Symbol()].map(x=>[x]))('%p',v=>assertThrow(TypeError, /^Type mismatch /, ()=>tow.fn.ag(v)));
             });
         });
     });
