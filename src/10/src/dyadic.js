@@ -1,6 +1,7 @@
 const valid = {
   precision(p) {
-    if (!Number.isInteger(p) || p < 0) {
+//    if (!Number.isInteger(p) || p < 0) {
+    if (!Number.isInteger(p) || p < 0 || p > 53) { // 53だと整数部が1bitすら保てなくなるが整数部が0でいいならそれでOK
       throw new RangeError("Precision must be a non-negative integer.");
     }
     return p;
