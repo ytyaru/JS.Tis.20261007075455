@@ -4,15 +4,18 @@ export const getTag = v => Object.prototype.toString.call(v).slice(8,-1);
 const N = {}
 for (let [k,v] of Object.entries(tlt)) {
     if ('function'===typeof v) continue;
-    N[n] = getTag(v);
+    N[k] = getTag(v);
 }
 N.ref = 'Reference';
 N.int = 'Integer';
 N.fin = 'Finite';
 N.nob = 'NonePrototypeObject';
+N.pob = 'PlainObject';
+N.ins = 'Instance';
 N.ins = 'Instance';
 N.cls = 'Class';
 N.run = 'Run';
+N.fn = 'Function';
 N.nan = 'NaN';
 export const tnm = N;
 /*

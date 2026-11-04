@@ -6,7 +6,7 @@ export const tlt = Object.freeze({
     sym: Symbol(),
     num: 0,
     int: 0,
-    flt: 0,
+    fin: 0,
     ref: {},
     obj: {},
     nob: Object.create(null),

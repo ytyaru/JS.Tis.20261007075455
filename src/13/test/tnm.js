@@ -1,0 +1,23 @@
+import { expect, test, describe } from "bun:test";
+import { tnm } from "../src/tnm.js";
+describe("tnm", () => {
+    test("und", () => expect(tnm.und).toBe('Undefined'));
+    test("nul", () => expect(tnm.nul).toBe('Null'));
+    test("nan", () => expect(tnm.nan).toBe('NaN'));
+    test("bln", () => expect(tnm.bln).toBe('Boolean'));
+    test("str", () => expect(tnm.str).toBe('String'));
+    test("big", () => expect(tnm.big).toBe('BigInt'));
+    test("sym", () => expect(tnm.sym).toBe('Symbol'));
+    test("num", () => expect(tnm.num).toBe('Number'));
+    test("int", () => expect(tnm.int).toBe('Integer'));
+    test("fin", () => expect(tnm.fin).toBe('Finite'));
+    test("ref", () => expect(tnm.ref).toBe('Reference'));
+    test("obj", () => expect(tnm.obj).toBe('Object'));
+    test("nob", () => expect(tnm.nob).toBe('NonePrototypeObject'));
+    test("pob", () => expect(tnm.pob).toBe('PlainObject'));
+    test("ary", () => expect(tnm.ary).toBe('Array'));
+    test("ins", () => expect(tnm.ins).toBe('Instance'));
+    test("cls", () => expect(tnm.cls).toBe('Class'));
+    test("run", () => expect(tnm.run).toBe('Run'));
+    test("fn", () => expect(tnm.fn).toBe('Function'));
+});
