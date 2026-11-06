@@ -19,3 +19,12 @@ const D = [
     {s:'run', l:'Run', v:null},
     {s:'fn',  l:'Function', v:null},
 ];
+// tis,tow
+// tnm,tlt
+for (let o of D) {
+    const {s,l,v} = o;
+    tis[s] = ;
+    tow[s] = ;
+    tnm[s] = l;
+    tlt[s] = v;
+}
